@@ -1,6 +1,6 @@
-﻿namespace P7CreateRestApi.Models.Entities;
+namespace P7CreateRestApi.DataTransferObject;
 
-public class TradeEntity
+public class Trade
 {
     public int TradeId {get; set;}
     public string Account {get; set;} = string.Empty;

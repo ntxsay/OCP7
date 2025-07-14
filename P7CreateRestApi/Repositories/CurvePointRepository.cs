@@ -10,7 +10,7 @@ public interface ICurvePointRepository : IDataRepository<CurvePointEntity>
 
 public class CurvePointRepository : DataRepository<CurvePointEntity>, ICurvePointRepository
 {
-    public CurvePointRepository(LocalDbContext context) : base(context)
+    public CurvePointRepository(LocalDbContext context, ILogger<DataRepository<CurvePointEntity>> logger) : base(context, logger)
     {
         
     }

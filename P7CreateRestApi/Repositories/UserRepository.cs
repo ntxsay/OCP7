@@ -1,36 +1,32 @@
 using Microsoft.EntityFrameworkCore;
 using P7CreateRestApi.Data;
-using P7CreateRestApi.Domain;
+using P7CreateRestApi.DataTransferObject;
+using P7CreateRestApi.Models.Entities;
 
-namespace P7CreateRestApi.Repositories
+namespace P7CreateRestApi.Repositories;
+
+public interface IUserRepository : IDataRepository<UserEntity>
 {
-    public class UserRepository
+    public UserEntity? FindByUserName(string userName);
+    public Task<UserEntity?> FindByUserNameAsync(string userName);
+}
+
+public class UserRepository : DataRepository<UserEntity>, IUserRepository
+{
+    public UserRepository(LocalDbContext context, ILogger<DataRepository<UserEntity>> logger) : base(context, logger)
     {
-        public LocalDbContext DbContext { get; }
+        
+    }
+    
+    public UserEntity? FindByUserName(string userName)
+    {
+        return DbContext.Users
+            .FirstOrDefault(user => user.UserName == userName);
+    }
 
-        public UserRepository(LocalDbContext dbContext)
-        {
-            DbContext = dbContext;
-        }
-
-        public User FindByUserName(string userName)
-        {
-            return DbContext.Users.Where(user => user.UserName == userName)
-                                  .FirstOrDefault();
-        }
-
-        public async Task<List<User>> FindAll()
-        {
-            return await DbContext.Users.ToListAsync();
-        }
-
-        public void Add(User user)
-        {
-        }
-
-        public User FindById(int id)
-        {
-            return null;
-        }
+    public async Task<UserEntity?> FindByUserNameAsync(string userName)
+    {
+        return await DbContext.Users
+            .FirstOrDefaultAsync(user => user.UserName == userName);
     }
 }

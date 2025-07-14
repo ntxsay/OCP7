@@ -1,44 +1,103 @@
-﻿using P7CreateRestApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using P7CreateRestApi.Data;
 
 namespace P7CreateRestApi.Repositories;
 
 public interface IDataRepository<T> where T : class
 {
-    public Task CreateAsync(T item);
+    public Task<bool> CreateAsync(T item);
+    public Task<List<T>> ReadAllAsync();
     public Task<T?> ReadAsync(int id);
-    public Task UpdateAsync(T item);
-    public Task DeleteAsync(T item);
+    public Task<bool> UpdateAsync(T item);
+    public Task<bool> DeleteAsync(int id);
+    public Task<bool> DeleteAsync(T item);
 }
 
 public abstract class DataRepository<T> : IDataRepository<T> where T : class
 {
-    private readonly LocalDbContext _dbContext;
+    protected readonly LocalDbContext DbContext;
+    protected readonly ILogger<DataRepository<T>> Logger;
+
+    protected DataRepository(LocalDbContext dbContext, ILogger<DataRepository<T>> logger)
+    {
+        DbContext = dbContext;
+        Logger = logger;
+    }
+
+    public async Task<bool> CreateAsync(T model)
+    {
+        try
+        {
+            await DbContext.Set<T>().AddAsync(model);
+            await DbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Erreur lors de la création de l'entité de type « {Name} » : {Message}", typeof(T).Name, e.Message);
+            return false;
+        }
+        
+        Logger.LogInformation("L'entité de type « {Name} » a été créée avec succès.", typeof(T).Name);
+        return true;
+    }
+
+    public async Task<List<T>> ReadAllAsync()
+    {
+        return await DbContext.Set<T>().ToListAsync();
+    }
     
-    public DataRepository(LocalDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public async Task CreateAsync(T model)
-    {
-        await _dbContext.Set<T>().AddAsync(model);
-        await _dbContext.SaveChangesAsync();
-    }
-
     public async Task<T?> ReadAsync(int id)
     {
-        return await _dbContext.Set<T>().FindAsync(id);
+        var result = await DbContext.Set<T>().FindAsync(id);
+        if (result == null) 
+            Logger.LogWarning("L'entité de type « {Name} » avec l'id « {Id} » n'existe pas.", typeof(T).Name, id);
+        
+        return result;
     }
 
-    public async Task UpdateAsync(T model)
+    public async Task<bool> UpdateAsync(T model)
     {
-        _dbContext.Set<T>().Update(model);
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            DbContext.Set<T>().Update(model);
+            await DbContext.SaveChangesAsync();
+            Logger.LogInformation("L'entité de type « {Name} » a été mise à jour avec succès.", typeof(T).Name);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Erreur lors de la mise à jour de l'entité de type « {Name} » : {Message}", typeof(T).Name, e.Message);
+            return false;
+        }
+        
+        return true;
     }
     
-    public async Task DeleteAsync(T entity)
+    public async Task<bool> DeleteAsync(int id)
     {
-        _dbContext.Set<T>().Remove(entity);
-        await _dbContext.SaveChangesAsync();
+        var entity = await ReadAsync(id);
+        if (entity == null)
+        {
+            Logger.LogWarning("Impossible de supprimer l'entité de type « {Name} » avec l'id « {Id} » car elle n'existe pas.", typeof(T).Name, id);
+            return false;
+        }
+        
+        return await DeleteAsync(entity);
+    }
+    
+    public async Task<bool> DeleteAsync(T entity)
+    {
+        try
+        {
+            DbContext.Set<T>().Remove(entity);
+            await DbContext.SaveChangesAsync();
+            Logger.LogInformation("L'entité de type « {Name} » a été supprimée avec succès.", typeof(T).Name);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Erreur lors de la suppression de l'entité de type « {Name} » : {Message}", typeof(T).Name, e.Message);
+            return false;
+        }
+        
+        return true;
     }
 }

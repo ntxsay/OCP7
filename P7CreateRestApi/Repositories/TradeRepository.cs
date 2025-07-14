@@ -10,7 +10,7 @@ public interface ITradeRepository : IDataRepository<TradeEntity>
 
 public class TradeRepository : DataRepository<TradeEntity>, ITradeRepository
 {
-    public TradeRepository(LocalDbContext context) : base(context)
+    public TradeRepository(LocalDbContext context, ILogger<DataRepository<TradeEntity>> logger) : base(context, logger)
     {
         
     }

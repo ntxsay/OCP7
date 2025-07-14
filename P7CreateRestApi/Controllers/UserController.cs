@@ -1,85 +1,98 @@
 using Microsoft.AspNetCore.Mvc;
-using P7CreateRestApi.Domain;
+using P7CreateRestApi.Converters;
+using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Repositories;
 
-namespace P7CreateRestApi.Controllers
+namespace P7CreateRestApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class UserController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UserController : ControllerBase
+    private readonly IUserRepository _userRepository;
+    private readonly ILogger<UserController> _logger;
+    public UserController(IUserRepository userRepository, ILogger<UserController> logger)
     {
-        private UserRepository _userRepository;
+        _userRepository = userRepository;
+        _logger = logger;
+    }
 
-        public UserController(UserRepository userRepository)
+    [HttpGet]
+    [Route("list")]
+    public IActionResult Home()
+    {
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("add")]
+    public IActionResult AddUser([FromBody]User user)
+    {
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("validate")]
+    public async Task<IActionResult> ValidateAsync([FromBody]User user)
+    {
+        if (!ModelState.IsValid)
         {
-            _userRepository = userRepository;
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
         }
-
-        [HttpGet]
-        [Route("list")]
-        public IActionResult Home()
-        {
-            return Ok();
-        }
-
-        [HttpGet]
-        [Route("add")]
-        public IActionResult AddUser([FromBody]User user)
-        {
-            return Ok();
-        }
-
-        [HttpGet]
-        [Route("validate")]
-        public IActionResult Validate([FromBody]User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
            
-           _userRepository.Add(user);
+        var isCreated = await _userRepository.CreateAsync(user.Convert());
+        if (!isCreated)
+            return BadRequest();
 
-            return Ok();
-        }
+        return Ok();
+    }
 
-        [HttpGet]
-        [Route("update/{id}")]
-        public IActionResult ShowUpdateForm(int id)
+    [HttpGet]
+    [Route("update/{id}")]
+    public async Task<IActionResult> ShowUpdateForm(int id)
+    {
+        var user = await _userRepository.ReadAsync(id);
+        if (user == null)
+            return NotFound();
+
+        return Ok();
+    }
+
+    [HttpPost]
+    [Route("update/{id}")]
+    public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] User user)
+    {
+        if (!ModelState.IsValid)
         {
-            User user = _userRepository.FindById(id);
-            
-            if (user == null)
-                throw new ArgumentException("Invalid user Id:" + id);
-
-            return Ok();
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
         }
+        
+        var entity = user.Convert();
+        entity.Id = id;
+        
+        var isUpdated = await _userRepository.UpdateAsync(entity);
+        if (!isUpdated)
+            return BadRequest();
+        
+        return Ok();
+    }
 
-        [HttpPost]
-        [Route("update/{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User user)
-        {
-            // TODO: check required fields, if valid call service to update Trade and return Trade list
-            return Ok();
-        }
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> DeleteUserAsync(int id)
+    {
+        var isDeleted = await _userRepository.DeleteAsync(id);
+        if (!isDeleted)
+            return NotFound();
+        return Ok();
+    }
 
-        [HttpDelete]
-        [Route("{id}")]
-        public IActionResult DeleteUser(int id)
-        {
-            User user = _userRepository.FindById(id);
-            
-            if (user == null)
-                throw new ArgumentException("Invalid user Id:" + id);
-
-            return Ok();
-        }
-
-        [HttpGet]
-        [Route("/secure/article-details")]
-        public async Task<ActionResult<List<User>>> GetAllUserArticles()
-        {
-            return Ok();
-        }
+    [HttpGet]
+    [Route("/secure/article-details")]
+    public async Task<ActionResult<List<User>>> GetAllUserArticles()
+    {
+        return Ok();
     }
 }

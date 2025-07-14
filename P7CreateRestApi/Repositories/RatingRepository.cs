@@ -10,7 +10,7 @@ public interface IRatingRepository : IDataRepository<RatingEntity>
 
 public class RatingRepository : DataRepository<RatingEntity>, IRatingRepository
 {
-    public RatingRepository(LocalDbContext context) : base(context)
+    public RatingRepository(LocalDbContext context, ILogger<DataRepository<RatingEntity>> logger) : base(context, logger)
     {
         
     }

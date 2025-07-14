@@ -3,8 +3,8 @@
 public class RatingEntity
 {
     public int Id {get; set;}
-    public string MoodysRating {get; set;}
-    public string SandPRating {get; set;}
-    public string FitchRating {get; set;}
+    public string MoodysRating {get; set;} = string.Empty;
+    public string SandPRating {get; set;} = string.Empty;
+    public string FitchRating {get; set;} = string.Empty;
     public byte? OrderNumber {get; set;}
 }
