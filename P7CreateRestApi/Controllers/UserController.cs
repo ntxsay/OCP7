@@ -32,8 +32,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    //ToDO: HttpPost au lieu de HttpGet?
-    [HttpGet]
+    [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]User user)
     {

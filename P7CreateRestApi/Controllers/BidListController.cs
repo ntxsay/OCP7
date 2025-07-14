@@ -17,7 +17,7 @@ public class BidListController : ControllerBase
         _logger = logger;
     }
     
-    [HttpGet]
+    [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody] BidList bidList)
     {

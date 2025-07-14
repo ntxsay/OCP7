@@ -32,7 +32,7 @@ public class RuleNameController : ControllerBase
         return Ok();
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]RuleName rule)
     {

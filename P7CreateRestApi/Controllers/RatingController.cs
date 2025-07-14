@@ -32,7 +32,7 @@ public class RatingController : ControllerBase
         return Ok();
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]Rating rating)
     {

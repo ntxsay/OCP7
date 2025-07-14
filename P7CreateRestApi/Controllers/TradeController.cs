@@ -32,7 +32,7 @@ public class TradeController : ControllerBase
         return Ok();
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]Trade trade)
     {
