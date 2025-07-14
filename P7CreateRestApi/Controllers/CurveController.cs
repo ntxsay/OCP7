@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
+using P7CreateRestApi.Repositories;
 
 namespace P7CreateRestApi.Controllers;
 
@@ -7,13 +9,20 @@ namespace P7CreateRestApi.Controllers;
 [Route("[controller]")]
 public class CurveController : ControllerBase
 {
-    // TODO: Inject Curve Point service
+    private readonly ICurvePointRepository _repository;
+    private readonly ILogger<CurveController> _logger;
+    public CurveController(ICurvePointRepository repository, ILogger<CurveController> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
 
     [HttpGet]
     [Route("list")]
-    public IActionResult Home()
+    public async Task<IActionResult> Home()
     {
-        return Ok();
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
@@ -25,33 +34,63 @@ public class CurveController : ControllerBase
 
     [HttpGet]
     [Route("validate")]
-    public IActionResult Validate([FromBody]CurvePoint curvePoint)
+    public async Task<IActionResult> ValidateAsync([FromBody]CurvePoint curvePoint)
     {
-        // TODO: check data valid and save to db, after saving return bid list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+           
+        var isCreated = await _repository.CreateAsync(curvePoint.Convert());
+        if (!isCreated)
+            return BadRequest();
+
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
     [Route("update/{id}")]
-    public IActionResult ShowUpdateForm(int id)
+    public async Task<IActionResult> ShowUpdateFormAsync(int id)
     {
-        // TODO: get CurvePoint by Id and to model then show to the form
-        return Ok();
+        var result = await _repository.ReadResultAsync(id);
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
     }
 
     [HttpPost]
     [Route("update/{id}")]
-    public IActionResult UpdateCurvePoint(int id, [FromBody] CurvePoint curvePoint)
+    public async Task<IActionResult> UpdateCurvePointAsync(int id, [FromBody] CurvePoint curvePoint)
     {
-        // TODO: check required fields, if valid call service to update Curve and return Curve list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+        
+        var entity = curvePoint.Convert();
+        entity.Id = id;
+        
+        var isUpdated = await _repository.UpdateAsync(entity);
+        if (!isUpdated)
+            return BadRequest();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteBid(int id)
+    public async Task<IActionResult> DeleteCurvePointAsync(int id)
     {
-        // TODO: Find Curve by Id and delete the Curve, return to Curve list
-        return Ok();
+        var isDeleted = await _repository.DeleteAsync(id);
+        if (!isDeleted)
+            return NotFound();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 }

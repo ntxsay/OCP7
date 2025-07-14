@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
+using P7CreateRestApi.Repositories;
 
 namespace P7CreateRestApi.Controllers;
 
@@ -7,14 +9,20 @@ namespace P7CreateRestApi.Controllers;
 [Route("[controller]")]
 public class RuleNameController : ControllerBase
 {
-    // TODO: Inject RuleName service
+    private readonly IRuleRepository _repository;
+    private readonly ILogger<RuleNameController> _logger;
+    public RuleNameController(IRuleRepository repository, ILogger<RuleNameController> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
 
     [HttpGet]
     [Route("list")]
-    public IActionResult Home()
+    public async Task<IActionResult> Home()
     {
-        // TODO: find all RuleName, add to model
-        return Ok();
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
@@ -26,33 +34,63 @@ public class RuleNameController : ControllerBase
 
     [HttpGet]
     [Route("validate")]
-    public IActionResult Validate([FromBody]RuleName trade)
+    public async Task<IActionResult> ValidateAsync([FromBody]RuleName rule)
     {
-        // TODO: check data valid and save to db, after saving return RuleName list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+           
+        var isCreated = await _repository.CreateAsync(rule.Convert());
+        if (!isCreated)
+            return BadRequest();
+
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
     [Route("update/{id}")]
-    public IActionResult ShowUpdateForm(int id)
+    public async Task<IActionResult> ShowUpdateFormAsync(int id)
     {
-        // TODO: get RuleName by Id and to model then show to the form
-        return Ok();
+        var result = await _repository.ReadResultAsync(id);
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
     }
 
     [HttpPost]
     [Route("update/{id}")]
-    public IActionResult UpdateRuleName(int id, [FromBody] RuleName rating)
+    public async Task<IActionResult> UpdateRuleNameAsync(int id, [FromBody] RuleName rule)
     {
-        // TODO: check required fields, if valid call service to update RuleName and return RuleName list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+        
+        var entity = rule.Convert();
+        entity.Id = id;
+        
+        var isUpdated = await _repository.UpdateAsync(entity);
+        if (!isUpdated)
+            return BadRequest();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteRuleName(int id)
+    public async Task<IActionResult> DeleteRuleNameAsync(int id)
     {
-        // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
-        return Ok();
+        var isDeleted = await _repository.DeleteAsync(id);
+        if (!isDeleted)
+            return NotFound();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 }

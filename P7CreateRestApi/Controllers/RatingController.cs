@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
+using P7CreateRestApi.Repositories;
 
 namespace P7CreateRestApi.Controllers;
 
@@ -7,14 +9,20 @@ namespace P7CreateRestApi.Controllers;
 [Route("[controller]")]
 public class RatingController : ControllerBase
 {
-    // TODO: Inject Rating service
+    private readonly IRatingRepository _repository;
+    private readonly ILogger<RatingController> _logger;
+    public RatingController(IRatingRepository repository, ILogger<RatingController> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
 
     [HttpGet]
     [Route("list")]
-    public IActionResult Home()
+    public async Task<IActionResult> Home()
     {
-        // TODO: find all Rating, add to model
-        return Ok();
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
@@ -26,33 +34,63 @@ public class RatingController : ControllerBase
 
     [HttpGet]
     [Route("validate")]
-    public IActionResult Validate([FromBody]Rating rating)
+    public async Task<IActionResult> ValidateAsync([FromBody]Rating rating)
     {
-        // TODO: check data valid and save to db, after saving return Rating list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+           
+        var isCreated = await _repository.CreateAsync(rating.Convert());
+        if (!isCreated)
+            return BadRequest();
+
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
     [Route("update/{id}")]
-    public IActionResult ShowUpdateForm(int id)
+    public async Task<IActionResult> ShowUpdateFormAsync(int id)
     {
-        // TODO: get Rating by Id and to model then show to the form
-        return Ok();
+        var result = await _repository.ReadResultAsync(id);
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
     }
 
     [HttpPost]
     [Route("update/{id}")]
-    public IActionResult UpdateRating(int id, [FromBody] Rating rating)
+    public async Task<IActionResult> UpdateRatingAsync(int id, [FromBody] Rating rating)
     {
-        // TODO: check required fields, if valid call service to update Rating and return Rating list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+        
+        var entity = rating.Convert();
+        entity.Id = id;
+        
+        var isUpdated = await _repository.UpdateAsync(entity);
+        if (!isUpdated)
+            return BadRequest();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteRating(int id)
+    public async Task<IActionResult> DeleteRatingAsync(int id)
     {
-        // TODO: Find Rating by Id and delete the Rating, return to Rating list
-        return Ok();
+        var isDeleted = await _repository.DeleteAsync(id);
+        if (!isDeleted)
+            return NotFound();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 }

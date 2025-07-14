@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
+using P7CreateRestApi.Repositories;
 
 namespace P7CreateRestApi.Controllers;
 
@@ -7,14 +9,20 @@ namespace P7CreateRestApi.Controllers;
 [Route("[controller]")]
 public class TradeController : ControllerBase
 {
-    // TODO: Inject Trade service
+    private readonly ITradeRepository _repository;
+    private readonly ILogger<TradeController> _logger;
+    public TradeController(ITradeRepository repository, ILogger<TradeController> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
 
     [HttpGet]
     [Route("list")]
-    public IActionResult Home()
+    public async Task<IActionResult> Home()
     {
-        // TODO: find all Trade, add to model
-        return Ok();
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
@@ -26,33 +34,63 @@ public class TradeController : ControllerBase
 
     [HttpGet]
     [Route("validate")]
-    public IActionResult Validate([FromBody]Trade trade)
+    public async Task<IActionResult> ValidateAsync([FromBody]Trade trade)
     {
-        // TODO: check data valid and save to db, after saving return Trade list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+           
+        var isCreated = await _repository.CreateAsync(trade.Convert());
+        if (!isCreated)
+            return BadRequest();
+
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
     [Route("update/{id}")]
-    public IActionResult ShowUpdateForm(int id)
+    public async Task<IActionResult> ShowUpdateFormAsync(int id)
     {
-        // TODO: get Trade by Id and to model then show to the form
-        return Ok();
+        var result = await _repository.ReadResultAsync(id);
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
     }
 
     [HttpPost]
     [Route("update/{id}")]
-    public IActionResult UpdateTrade(int id, [FromBody] Trade trade)
+    public async Task<IActionResult> UpdateTradeAsync(int id, [FromBody] Trade trade)
     {
-        // TODO: check required fields, if valid call service to update Trade and return Trade list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+        
+        var entity = trade.Convert();
+        entity.Id = id;
+        
+        var isUpdated = await _repository.UpdateAsync(entity);
+        if (!isUpdated)
+            return BadRequest();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteTrade(int id)
+    public async Task<IActionResult> DeleteTradeAsync(int id)
     {
-        // TODO: Find Trade by Id and delete the Trade, return to Trade list
-        return Ok();
+        var isDeleted = await _repository.DeleteAsync(id);
+        if (!isDeleted)
+            return NotFound();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 }

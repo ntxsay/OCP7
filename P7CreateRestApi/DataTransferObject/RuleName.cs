@@ -6,7 +6,6 @@ namespace P7CreateRestApi.DataTransferObject;
 
 public class RuleName
 {
-    [BindNever]
     [ValidateNever]
     public int Id { get; set; }
     

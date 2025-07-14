@@ -21,11 +21,11 @@ public class LocalDbContext : DbContext
             
         //Bids
         builder.Entity<BidEntity>()
-            .Property(p => p.BidListId)
+            .Property(p => p.Id)
             .ValueGeneratedOnAdd()
             .IsRequired();
         builder.Entity<BidEntity>()
-            .HasKey(p => p.BidListId);
+            .HasKey(p => p.Id);
         builder.Entity<BidEntity>()
             .Property(p => p.Account)
             .HasMaxLength(255)

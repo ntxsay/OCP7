@@ -93,7 +93,7 @@ internal static class ModelConverters
     {
         return new Trade()
         {
-            TradeId = entity.TradeId,
+            Id = entity.Id,
             Account = entity.Account,
             AccountType = entity.AccountType,
             BuyQuantity = entity.BuyQuantity,
@@ -121,7 +121,7 @@ internal static class ModelConverters
     {
         return new TradeEntity()
         {
-            TradeId = trade.TradeId,
+            Id = trade.Id,
             Account = trade.Account,
             AccountType = trade.AccountType,
             BuyQuantity = trade.BuyQuantity,
@@ -183,7 +183,7 @@ internal static class ModelConverters
     {
         return new BidList()
         {
-            BidListId = bid.BidListId,
+            Id = bid.Id,
             Account = bid.Account,
             BidType = bid.BidType,
             BidQuantity = bid.BidQuantity
@@ -194,7 +194,7 @@ internal static class ModelConverters
     {
         return new BidEntity()
         {
-            BidListId = bidList.BidListId,
+            Id = bidList.Id,
             Account = bidList.Account,
             BidType = bidList.BidType,
             BidQuantity = bidList.BidQuantity

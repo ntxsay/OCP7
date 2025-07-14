@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
 namespace P7CreateRestApi.DataTransferObject;
 
 public class Trade
 {
-    public int TradeId {get; set;}
+    [ValidateNever]
+    public int Id {get; set;}
     public string Account {get; set;} = string.Empty;
     public string AccountType {get; set;} = string.Empty;
     public double? BuyQuantity {get; set;}

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
+using P7CreateRestApi.Repositories;
 
 namespace P7CreateRestApi.Controllers;
 
@@ -7,33 +9,71 @@ namespace P7CreateRestApi.Controllers;
 [Route("[controller]")]
 public class BidListController : ControllerBase
 {
+    private readonly IBidRepository _repository;
+    private readonly ILogger<BidListController> _logger;
+    public BidListController(IBidRepository repository, ILogger<BidListController> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
+    
     [HttpGet]
     [Route("validate")]
-    public IActionResult Validate([FromBody] BidList bidList)
+    public async Task<IActionResult> ValidateAsync([FromBody] BidList bidList)
     {
-        // TODO: check data valid and save to db, after saving return bid list
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+           
+        var isCreated = await _repository.CreateAsync(bidList.Convert());
+        if (!isCreated)
+            return BadRequest();
+
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
     [Route("update/{id}")]
-    public IActionResult ShowUpdateForm(int id)
+    public async Task<IActionResult> ShowUpdateFormAsync(int id)
     {
-        return Ok();
+        var result = await _repository.ReadResultAsync(id);
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
     }
 
     [HttpPost]
     [Route("update/{id}")]
-    public IActionResult UpdateBid(int id, [FromBody] BidList bidList)
+    public async Task<IActionResult> UpdateBidAsync(int id, [FromBody] BidList bidList)
     {
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
-        return Ok();
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Les données reçues ne sont pas valides.");
+            return BadRequest();
+        }
+        
+        var entity = bidList.Convert();
+        entity.Id = id;
+        
+        var isUpdated = await _repository.UpdateAsync(entity);
+        if (!isUpdated)
+            return BadRequest();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteBid(int id)
+    public async Task<IActionResult> DeleteBidAsync(int id)
     {
+        var isDeleted = await _repository.DeleteAsync(id);
+        if (!isDeleted)
+            return NotFound();
         return Ok();
     }
 }

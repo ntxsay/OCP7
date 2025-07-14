@@ -2,7 +2,7 @@
 
 public class TradeEntity
 {
-    public int TradeId {get; set;}
+    public int Id {get; set;}
     public string Account {get; set;} = string.Empty;
     public string AccountType {get; set;} = string.Empty;
     public double? BuyQuantity {get; set;}

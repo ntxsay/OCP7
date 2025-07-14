@@ -6,7 +6,7 @@ namespace P7CreateRestApi.DataTransferObject;
 public class BidList
 {
     [ValidateNever]
-    public int BidListId { get; set; } 
+    public int Id { get; set; } 
 
     [Required(ErrorMessage = "Le compte est obligatoire")]
     public string Account { get; set; } = string.Empty;

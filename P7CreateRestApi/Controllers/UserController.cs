@@ -9,19 +9,20 @@ namespace P7CreateRestApi.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _repository;
     private readonly ILogger<UserController> _logger;
-    public UserController(IUserRepository userRepository, ILogger<UserController> logger)
+    public UserController(IUserRepository repository, ILogger<UserController> logger)
     {
-        _userRepository = userRepository;
+        _repository = repository;
         _logger = logger;
     }
 
     [HttpGet]
     [Route("list")]
-    public IActionResult Home()
+    public async Task<IActionResult> Home()
     {
-        return Ok();
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
@@ -31,6 +32,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
+    //ToDO: HttpPost au lieu de HttpGet?
     [HttpGet]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]User user)
@@ -41,22 +43,23 @@ public class UserController : ControllerBase
             return BadRequest();
         }
            
-        var isCreated = await _userRepository.CreateAsync(user.Convert());
+        var isCreated = await _repository.CreateAsync(user.Convert());
         if (!isCreated)
             return BadRequest();
 
-        return Ok();
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateForm(int id)
     {
-        var user = await _userRepository.ReadAsync(id);
-        if (user == null)
+        var result = await _repository.ReadResultAsync(id);
+        if (result == null)
             return NotFound();
 
-        return Ok();
+        return Ok(result);
     }
 
     [HttpPost]
@@ -72,21 +75,24 @@ public class UserController : ControllerBase
         var entity = user.Convert();
         entity.Id = id;
         
-        var isUpdated = await _userRepository.UpdateAsync(entity);
+        var isUpdated = await _repository.UpdateAsync(entity);
         if (!isUpdated)
             return BadRequest();
         
-        return Ok();
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteUserAsync(int id)
     {
-        var isDeleted = await _userRepository.DeleteAsync(id);
+        var isDeleted = await _repository.DeleteAsync(id);
         if (!isDeleted)
             return NotFound();
-        return Ok();
+        
+        var list = await _repository.ReadResultAllAsync();
+        return Ok(list);
     }
 
     [HttpGet]
