@@ -3,11 +3,11 @@ using P7CreateRestApi.Models.Entities;
 
 namespace P7CreateRestApi.Converters;
 
-internal static class ModelConverters
+public static class ModelConverters
 {
     #region User
 
-    internal static User Convert(this UserEntity entity)
+    public static User Convert(this UserEntity entity)
     {
         return new User()
         {
@@ -16,7 +16,7 @@ internal static class ModelConverters
         };
     }
     
-    internal static UserEntity Convert(this User user)
+    public static UserEntity Convert(this User user)
     {
         return new UserEntity()
         {
@@ -29,7 +29,7 @@ internal static class ModelConverters
     
     #region Rating
     
-    internal static Rating Convert(this RatingEntity entity)
+    public static Rating Convert(this RatingEntity entity)
     {
         return new Rating()
         {
@@ -41,7 +41,7 @@ internal static class ModelConverters
         };
     }
     
-    internal static RatingEntity Convert(this Rating rating)
+    public static RatingEntity Convert(this Rating rating)
     {
         return new RatingEntity()
         {
@@ -57,7 +57,7 @@ internal static class ModelConverters
 
     #region Rules
 
-    internal static RuleName Convert(this RuleEntity entity)
+    public static RuleName Convert(this RuleEntity entity)
     {
         return new RuleName()
         {
@@ -71,7 +71,7 @@ internal static class ModelConverters
         };
     }
     
-    internal static RuleEntity Convert(this RuleName ruleName)
+    public static RuleEntity Convert(this RuleName ruleName)
     {
         return new RuleEntity()
         {
@@ -89,7 +89,7 @@ internal static class ModelConverters
     
     #region Trade
     
-    internal static Trade Convert(this TradeEntity entity)
+    public static Trade Convert(this TradeEntity entity)
     {
         return new Trade()
         {
@@ -117,7 +117,7 @@ internal static class ModelConverters
         };
     }
     
-    internal static TradeEntity Convert(this Trade trade)
+    public static TradeEntity Convert(this Trade trade)
     {
         return new TradeEntity()
         {
@@ -149,7 +149,7 @@ internal static class ModelConverters
 
     #region CurvePoint
 
-    internal static CurvePoint Convert(this CurvePointEntity curvePoint)
+    public static CurvePoint Convert(this CurvePointEntity curvePoint)
     {
         return new CurvePoint()
         {
@@ -162,7 +162,7 @@ internal static class ModelConverters
         };
     }
     
-    internal static CurvePointEntity Convert(this CurvePoint curvePoint)
+    public static CurvePointEntity Convert(this CurvePoint curvePoint)
     {
         return new CurvePointEntity()
         {
@@ -179,7 +179,7 @@ internal static class ModelConverters
     
     #region Bid
     
-    internal static BidList Convert(this BidEntity bid)
+    public static BidList Convert(this BidEntity bid)
     {
         return new BidList()
         {
@@ -190,7 +190,7 @@ internal static class ModelConverters
         };
     }
     
-    internal static BidEntity Convert(this BidList bidList)
+    public static BidEntity Convert(this BidList bidList)
     {
         return new BidEntity()
         {

@@ -6,6 +6,7 @@ namespace P7CreateRestApi.Repositories;
 public interface IDataRepository<T> where T : class
 {
     public Task<bool> CreateAsync(T item);
+    public Task<bool> CreateRangeAsync(params T[] model);
     public Task<List<T>> ReadAllAsync();
     public Task<T?> ReadAsync(int id);
     public Task<bool> UpdateAsync(T item);
@@ -29,6 +30,23 @@ public abstract class DataRepository<T> : IDataRepository<T> where T : class
         try
         {
             await DbContext.Set<T>().AddAsync(model);
+            await DbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Erreur lors de la création de l'entité de type « {Name} » : {Message}", typeof(T).Name, e.Message);
+            return false;
+        }
+        
+        Logger.LogInformation("L'entité de type « {Name} » a été créée avec succès.", typeof(T).Name);
+        return true;
+    }
+    
+    public async Task<bool> CreateRangeAsync(params T[] model)
+    {
+        try
+        {
+            await DbContext.Set<T>().AddRangeAsync(model);
             await DbContext.SaveChangesAsync();
         }
         catch (Exception e)
