@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace P7CreateRestApi.DataTransferObject;
@@ -6,7 +7,11 @@ public class Trade
 {
     [ValidateNever]
     public int Id {get; set;}
+    
+    [Required(ErrorMessage = "Le nom du compte est obligatoire")]
     public string Account {get; set;} = string.Empty;
+    
+    [Required(ErrorMessage = "Le type de compte est obligatoire")]
     public string AccountType {get; set;} = string.Empty;
     public double? BuyQuantity {get; set;}
     public double? SellQuantity {get; set;}

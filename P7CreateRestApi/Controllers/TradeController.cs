@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
@@ -25,6 +26,7 @@ public class TradeController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("add")]
     public IActionResult AddTrade([FromBody]Trade trade)
@@ -32,6 +34,7 @@ public class TradeController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]Trade trade)
@@ -50,6 +53,7 @@ public class TradeController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -61,6 +65,7 @@ public class TradeController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateTradeAsync(int id, [FromBody] Trade trade)
@@ -82,6 +87,7 @@ public class TradeController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteTradeAsync(int id)

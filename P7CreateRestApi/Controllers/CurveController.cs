@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Abstractions;
 using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Repositories;
@@ -11,10 +13,12 @@ public class CurveController : ControllerBase
 {
     private readonly ICurvePointRepository _repository;
     private readonly ILogger<CurveController> _logger;
-    public CurveController(ICurvePointRepository repository, ILogger<CurveController> logger)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public CurveController(ICurvePointRepository repository, ILogger<CurveController> logger, IHttpContextAccessor httpContextAccessor)
     {
         _repository = repository;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet]
@@ -25,6 +29,7 @@ public class CurveController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("add")]
     public IActionResult AddCurvePoint([FromBody]CurvePoint curvePoint)
@@ -32,10 +37,17 @@ public class CurveController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]CurvePoint curvePoint)
     {
+        if (_httpContextAccessor.HttpContext != null && 
+            !_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        {
+            _logger.LogWarning("Tentative d'accès non autorisée.");
+            return Unauthorized();
+        }
         if (!ModelState.IsValid)
         {
             _logger.LogError("Les données reçues ne sont pas valides.");
@@ -50,6 +62,7 @@ public class CurveController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -61,6 +74,7 @@ public class CurveController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateCurvePointAsync(int id, [FromBody] CurvePoint curvePoint)
@@ -82,6 +96,7 @@ public class CurveController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteCurvePointAsync(int id)

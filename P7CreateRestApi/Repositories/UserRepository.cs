@@ -25,7 +25,7 @@ public class UserRepository : DataRepository<UserEntity>, IUserRepository
     
     public UserEntity? FindByUserName(string userName)
     {
-        var result= DbContext.Users
+        var result= DbContext.UserNames
             .FirstOrDefault(user => user.UserName == userName);
         if (result == null)
         {
@@ -38,7 +38,7 @@ public class UserRepository : DataRepository<UserEntity>, IUserRepository
 
     public async Task<UserEntity?> FindByUserNameAsync(string userName)
     {
-        var result = await DbContext.Users
+        var result = await DbContext.UserNames
             .FirstOrDefaultAsync(user => user.UserName == userName);
         if (result == null)
         {

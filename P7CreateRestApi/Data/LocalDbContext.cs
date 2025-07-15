@@ -1,18 +1,20 @@
 using System.Collections.Immutable;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Models.Entities;
 
 namespace P7CreateRestApi.Data;
 
-public class LocalDbContext : DbContext
+public class LocalDbContext : IdentityDbContext<IdentityUser>
 {
     public DbSet<BidEntity> Bids { get; set; }
     public DbSet<CurvePointEntity> CurvePoints { get; set; }
     public DbSet<RatingEntity> Ratings { get; set; }
     public DbSet<RuleEntity> Rules { get; set; }
     public DbSet<TradeEntity> Trades { get; set; }
-    public DbSet<UserEntity> Users { get; set;}
+    public DbSet<UserEntity> UserNames { get; set;}
     public LocalDbContext(DbContextOptions<LocalDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)

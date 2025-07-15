@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
@@ -25,6 +26,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("add")]
     public IActionResult AddUser([FromBody]User user)
@@ -32,6 +34,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]User user)
@@ -50,6 +53,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateForm(int id)
@@ -61,6 +65,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] User user)
@@ -82,6 +87,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteUserAsync(int id)
@@ -94,6 +100,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("/secure/article-details")]
     public async Task<ActionResult<List<User>>> GetAllUserArticles()

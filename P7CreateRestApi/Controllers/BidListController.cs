@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
@@ -17,6 +18,7 @@ public class BidListController : ControllerBase
         _logger = logger;
     }
     
+    [Authorize]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody] BidList bidList)
@@ -35,6 +37,7 @@ public class BidListController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -46,6 +49,7 @@ public class BidListController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateBidAsync(int id, [FromBody] BidList bidList)
@@ -67,6 +71,7 @@ public class BidListController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteBidAsync(int id)

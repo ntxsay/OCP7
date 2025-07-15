@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using P7CreateRestApi.Converters;
 using P7CreateRestApi.DataTransferObject;
@@ -25,6 +26,7 @@ public class RuleNameController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("add")]
     public IActionResult AddRuleName([FromBody]RuleName trade)
@@ -32,6 +34,7 @@ public class RuleNameController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]RuleName rule)
@@ -50,6 +53,7 @@ public class RuleNameController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -61,6 +65,7 @@ public class RuleNameController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateRuleNameAsync(int id, [FromBody] RuleName rule)
@@ -82,6 +87,7 @@ public class RuleNameController : ControllerBase
         return Ok(list);
     }
 
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteRuleNameAsync(int id)
