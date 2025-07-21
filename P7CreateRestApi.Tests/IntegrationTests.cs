@@ -31,7 +31,6 @@ public class IntegrationTests : IDisposable
         _curvePointRepository = new CurvePointRepository(_dbContext,
             new LoggerFactory().CreateLogger<CurvePointRepository>());
 
-        //_dbContext.Database.EnsureDeleted();
         _dbContext.Database.EnsureCreated();
     }
 
