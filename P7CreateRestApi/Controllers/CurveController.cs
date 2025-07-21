@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Abstractions;
 using P7CreateRestApi.Converters;
-using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Repositories;
+using P7CreateRestApi.ViewModels;
 
 namespace P7CreateRestApi.Controllers;
 
@@ -42,12 +42,6 @@ public class CurveController : ControllerBase
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]CurvePoint curvePoint)
     {
-        if (_httpContextAccessor.HttpContext != null && 
-            !_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-        {
-            _logger.LogWarning("Tentative d'accès non autorisée.");
-            return Unauthorized();
-        }
         if (!ModelState.IsValid)
         {
             _logger.LogError("Les données reçues ne sont pas valides.");

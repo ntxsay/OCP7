@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using P7CreateRestApi.Converters;
-using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Repositories;
+using P7CreateRestApi.ViewModels;
 
 namespace P7CreateRestApi.Controllers;
 

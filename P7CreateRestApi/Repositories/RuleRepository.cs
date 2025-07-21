@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using P7CreateRestApi.Converters;
 using P7CreateRestApi.Data;
-using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Models.Entities;
+using P7CreateRestApi.ViewModels;
 
 namespace P7CreateRestApi.Repositories;
 

@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using P7CreateRestApi.Data;
-using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Models.Entities;
 using P7CreateRestApi.Repositories;
+using P7CreateRestApi.ViewModels;
 
 namespace P7CreateRestApi.Tests;
 

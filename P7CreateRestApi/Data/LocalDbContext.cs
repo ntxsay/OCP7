@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using P7CreateRestApi.DataTransferObject;
 using P7CreateRestApi.Models.Entities;
 
 namespace P7CreateRestApi.Data;
