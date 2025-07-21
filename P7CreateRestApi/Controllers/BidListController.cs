@@ -18,7 +18,7 @@ public class BidListController : ControllerBase
         _logger = logger;
     }
     
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody] BidList bidList)
@@ -37,7 +37,7 @@ public class BidListController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -49,7 +49,7 @@ public class BidListController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateBidAsync(int id, [FromBody] BidList bidList)
@@ -71,7 +71,7 @@ public class BidListController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteBidAsync(int id)

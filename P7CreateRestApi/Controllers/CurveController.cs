@@ -29,7 +29,7 @@ public class CurveController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("add")]
     public IActionResult AddCurvePoint([FromBody]CurvePoint curvePoint)
@@ -37,7 +37,7 @@ public class CurveController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]CurvePoint curvePoint)
@@ -56,7 +56,7 @@ public class CurveController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -68,7 +68,7 @@ public class CurveController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateCurvePointAsync(int id, [FromBody] CurvePoint curvePoint)
@@ -90,7 +90,7 @@ public class CurveController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteCurvePointAsync(int id)

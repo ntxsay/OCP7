@@ -26,7 +26,7 @@ public class RuleNameController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("add")]
     public IActionResult AddRuleName([FromBody]RuleName trade)
@@ -34,7 +34,7 @@ public class RuleNameController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]RuleName rule)
@@ -53,7 +53,7 @@ public class RuleNameController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -65,7 +65,7 @@ public class RuleNameController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateRuleNameAsync(int id, [FromBody] RuleName rule)
@@ -87,7 +87,7 @@ public class RuleNameController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteRuleNameAsync(int id)

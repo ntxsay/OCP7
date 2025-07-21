@@ -26,7 +26,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("add")]
     public IActionResult AddUser([FromBody]User user)
@@ -34,7 +34,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]User user)
@@ -53,7 +53,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateForm(int id)
@@ -65,7 +65,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] User user)
@@ -87,7 +87,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteUserAsync(int id)
@@ -100,7 +100,7 @@ public class UserController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("/secure/article-details")]
     public async Task<ActionResult<List<User>>> GetAllUserArticles()

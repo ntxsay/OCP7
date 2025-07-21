@@ -13,7 +13,7 @@ public class HomeController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("Admin")]
     public IActionResult Admin()

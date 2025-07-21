@@ -26,7 +26,7 @@ public class TradeController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("add")]
     public IActionResult AddTrade([FromBody]Trade trade)
@@ -34,7 +34,7 @@ public class TradeController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
     public async Task<IActionResult> ValidateAsync([FromBody]Trade trade)
@@ -53,7 +53,7 @@ public class TradeController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("update/{id}")]
     public async Task<IActionResult> ShowUpdateFormAsync(int id)
@@ -65,7 +65,7 @@ public class TradeController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
     public async Task<IActionResult> UpdateTradeAsync(int id, [FromBody] Trade trade)
@@ -87,7 +87,7 @@ public class TradeController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> DeleteTradeAsync(int id)
