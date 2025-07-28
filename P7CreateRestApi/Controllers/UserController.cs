@@ -18,7 +18,7 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [Authorize(Roles = "Admin")]
     [Route("list")]
     public async Task<IActionResult> Home()
     {
@@ -68,6 +68,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] User user)
     {
         if (!ModelState.IsValid)
@@ -90,6 +91,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteUserAsync(int id)
     {
         var isDeleted = await _repository.DeleteAsync(id);

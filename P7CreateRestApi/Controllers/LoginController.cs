@@ -25,6 +25,7 @@ public class LoginController : ControllerBase
     
     [HttpPost]
     [Route("login")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         var user = await _userManager.FindByNameAsync(model.UserName);
@@ -52,6 +53,11 @@ public class LoginController : ControllerBase
         return Unauthorized();
     } 
     
+    /// <summary>
+    /// Crée et retourne un token JWT
+    /// </summary>
+    /// <param name="authClaims"></param>
+    /// <returns></returns>
     private JwtSecurityToken GetToken(List<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

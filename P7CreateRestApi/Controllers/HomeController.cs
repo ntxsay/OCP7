@@ -8,6 +8,7 @@ namespace P7CreateRestApi.Controllers;
 public class HomeController : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public IActionResult Get()
     {
         return Ok();

@@ -20,6 +20,7 @@ public class RuleNameController : ControllerBase
 
     [HttpGet]
     [Route("list")]
+    [Authorize]
     public async Task<IActionResult> Home()
     {
         var list = await _repository.ReadResultAllAsync();
@@ -37,6 +38,7 @@ public class RuleNameController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ValidateAsync([FromBody]RuleName rule)
     {
         if (!ModelState.IsValid)
@@ -68,6 +70,7 @@ public class RuleNameController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateRuleNameAsync(int id, [FromBody] RuleName rule)
     {
         if (!ModelState.IsValid)
@@ -90,6 +93,7 @@ public class RuleNameController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteRuleNameAsync(int id)
     {
         var isDeleted = await _repository.DeleteAsync(id);
