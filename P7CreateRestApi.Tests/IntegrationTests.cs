@@ -12,19 +12,18 @@ namespace P7CreateRestApi.Tests;
 
 public class IntegrationTests : IDisposable
 {
-    private readonly DbContextOptions<LocalDbContext> _options;
     private readonly LocalDbContext _dbContext;
     private readonly ICurvePointRepository _curvePointRepository;
     private readonly IBidRepository _bidRepository;
     
     public IntegrationTests()
     {
-        _options = new DbContextOptionsBuilder<LocalDbContext>()
+        var options = new DbContextOptionsBuilder<LocalDbContext>()
             .UseInMemoryDatabase("findexiumDb")
             .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .Options;
 
-        _dbContext = new LocalDbContext(_options);
+        _dbContext = new LocalDbContext(options);
         _bidRepository = new BidRepository(_dbContext, 
             new LoggerFactory().CreateLogger<BidRepository>());
         
