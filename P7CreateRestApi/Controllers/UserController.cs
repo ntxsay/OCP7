@@ -20,6 +20,7 @@ public class UserController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [Route("list")]
+    [HttpGet]
     public async Task<IActionResult> Home()
     {
         var list = await _repository.ReadResultAllAsync();

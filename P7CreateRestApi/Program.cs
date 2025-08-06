@@ -47,7 +47,6 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<LocalDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IBidRepository, BidRepository>();
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     {
         //Sign In settings.
@@ -97,6 +96,7 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+builder.Services.AddScoped<IBidRepository, BidRepository>();
 builder.Services.AddScoped<ICurvePointRepository, CurvePointRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IRuleRepository, RuleRepository>();
