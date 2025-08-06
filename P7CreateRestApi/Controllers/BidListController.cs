@@ -21,7 +21,6 @@ public class BidListController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ValidateAsync([FromBody] BidList bidList)
     {
         if (!ModelState.IsValid)
@@ -53,7 +52,6 @@ public class BidListController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateBidAsync(int id, [FromBody] BidList bidList)
     {
         if (!ModelState.IsValid)
@@ -76,7 +74,6 @@ public class BidListController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteBidAsync(int id)
     {
         var isDeleted = await _repository.DeleteAsync(id);

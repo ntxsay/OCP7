@@ -25,7 +25,6 @@ public class LoginController : ControllerBase
     
     [HttpPost]
     [Route("login")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         var user = await _userManager.FindByNameAsync(model.UserName);

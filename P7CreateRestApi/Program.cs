@@ -46,7 +46,8 @@ builder.Services.AddSwaggerGen(option =>
 });
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<LocalDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("SqliteDefaultConnection")));
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     {
         //Sign In settings.

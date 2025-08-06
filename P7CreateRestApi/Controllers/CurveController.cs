@@ -41,7 +41,6 @@ public class CurveController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("validate")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ValidateAsync([FromBody]CurvePoint curvePoint)
     {
         if (!ModelState.IsValid)
@@ -73,7 +72,6 @@ public class CurveController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateCurvePointAsync(int id, [FromBody] CurvePoint curvePoint)
     {
         if (!ModelState.IsValid)
@@ -96,7 +94,6 @@ public class CurveController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteCurvePointAsync(int id)
     {
         var isDeleted = await _repository.DeleteAsync(id);

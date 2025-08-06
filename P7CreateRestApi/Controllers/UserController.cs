@@ -69,7 +69,6 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("update/{id}")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] User user)
     {
         if (!ModelState.IsValid)
@@ -92,7 +91,6 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteUserAsync(int id)
     {
         var isDeleted = await _repository.DeleteAsync(id);
